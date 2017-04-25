@@ -33,6 +33,10 @@ Each docker image is installed with the following components:
 See the [**changelog.md**](./changelog.md).
 
 ## Usage
+The Ubuntu XFCE image has been updated to work with nvidia-docker:
+
+    nvidia-docker run --rm -d -p 5901:5901 -p 6901:6901 docker-headless-vnc-container
+
 The usage is for all provide images **similar**, for instance see following the usage of the `consol/centos-xfce-vnc` image:
 
 Run command with mapping to local port `5901` (vnc protocol) and `6901` (vnc web access):
