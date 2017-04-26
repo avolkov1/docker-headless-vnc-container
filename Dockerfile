@@ -5,12 +5,7 @@ FROM ubuntu:16.04
 MAINTAINER Tobias Schneck "tobias.schneck@consol.de"
 ENV REFRESHED_AT 2017-02-14
 
-LABEL io.k8s.description="Headless VNC Container with Xfce window manager, firefox and chromium" \
-      io.k8s.display-name="Headless VNC Container based on Ubuntu" \
-      io.openshift.expose-services="6901:http,5901:xvnc" \
-      io.openshift.tags="vnc, ubuntu, xfce" \
-      io.openshift.non-scalable=true \
-      com.nvidia.volumes.needed="nvidia_driver"
+LABEL com.nvidia.volumes.needed="nvidia_driver"
 
 ### NV Stuff
 ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
