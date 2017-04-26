@@ -1,13 +1,12 @@
-# This Dockerfile is used to build an headles vnc image based on Ubuntu
-
 FROM ubuntu:16.04
 
-MAINTAINER Tobias Schneck "tobias.schneck@consol.de"
-ENV REFRESHED_AT 2017-02-14
+#MAINTAINER Tobias Schneck "tobias.schneck@consol.de"
+MAINTAINER Douglas Holt "dholt@nvidia.com"
 
+# Add label to include nvidia-docker volume
 LABEL com.nvidia.volumes.needed="nvidia_driver"
 
-### NV Stuff
+### Add paths to nvidia tools
 ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
 ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}
 
@@ -44,7 +43,7 @@ RUN $INST_SCRIPTS/tigervnc.sh
 RUN $INST_SCRIPTS/no_vnc.sh
 
 ### Install firfox and chrome browser
-RUN $INST_SCRIPTS/firefox.sh
+#RUN $INST_SCRIPTS/firefox.sh
 RUN $INST_SCRIPTS/chrome.sh
 
 ### Install xfce UI
@@ -56,7 +55,7 @@ RUN $INST_SCRIPTS/libnss_wrapper.sh
 ADD ./src/common/scripts $STARTUPDIR
 RUN $INST_SCRIPTS/set_user_permission.sh $STARTUPDIR $HOME
 
-### NV Stuff
+### Set LD paths to include NVIDIA libraries
 RUN echo "/usr/local/cuda/lib" >> /etc/ld.so.conf.d/cuda.conf && \
     echo "/usr/local/cuda/lib64" >> /etc/ld.so.conf.d/cuda.conf && \
     ldconfig
