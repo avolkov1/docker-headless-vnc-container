@@ -1,48 +1,21 @@
-# Docker container images with "headless" VNC session
+# Ubuntu desktop Docker container image with VNC
 
-The repository contains a collection of Docker images with headless VNC environments.
+Ubuntu 16.04 container running the XFCE window manager with GPU support (via nvidia-docker)
 
-Each docker image is installed with the following components:
+The Docker image is installed with the following components:
 
-* Desktop environment [**Xfce4**](http://www.xfce.org) or [**IceWM**](http://www.icewm.org/)
+* Desktop environment [**Xfce4**](http://www.xfce.org)
 * VNC-Server (default VNC port `5901`)
 * [**noVNC**](https://github.com/kanaka/noVNC) - HTML5 VNC client (default http port `6901`)
 * Browsers:
   * Mozilla Firefox
   * Chromium
 
-## Current provided OS & UI sessions:
-* `consol/centos-xfce-vnc`: __Centos7 with `Xfce4` UI session__ 
-
-  [![](https://images.microbadger.com/badges/version/consol/centos-xfce-vnc.svg)](https://hub.docker.com/r/consol/centos-xfce-vnc/) [![](https://images.microbadger.com/badges/image/consol/centos-xfce-vnc.svg)](http://microbadger.com/images/consol/centos-xfce-vnc)
-
-* `consol/ubuntu-xfce-vnc`: __Ubuntu with `Xfce4` UI session__
-
-  [![](https://images.microbadger.com/badges/version/consol/ubuntu-xfce-vnc.svg)](https://hub.docker.com/r/consol/ubuntu-xfce-vnc/) [![](https://images.microbadger.com/badges/image/consol/ubuntu-xfce-vnc.svg)](http://microbadger.com/images/consol/ubuntu-xfce-vnc)
-
-* `consol/centos-icewm-vnc`: __Centos7 with `IceWM` UI session__ 
-
-  [![](https://images.microbadger.com/badges/version/consol/centos-icewm-vnc.svg)](https://hub.docker.com/r/consol/centos-icewm-vnc/) [![](https://images.microbadger.com/badges/image/consol/centos-icewm-vnc.svg)](http://microbadger.com/images/consol/centos-icewm-vnc)
-
-* `consol/ubuntu-icewm-vnc`: __Ubuntu with `IceWM` UI session__
-
-  [![](https://images.microbadger.com/badges/version/consol/ubuntu-icewm-vnc.svg)](https://hub.docker.com/r/consol/ubuntu-icewm-vnc/) [![](https://images.microbadger.com/badges/image/consol/ubuntu-icewm-vnc.svg)](http://microbadger.com/images/consol/ubuntu-icewm-vnc)
-
-
-## Latest Changes
-See the [**changelog.md**](./changelog.md).
-
 ## Usage
-The Ubuntu XFCE image has been updated to work with nvidia-docker:
+Run command mapping port `5901` (vnc protocol) and `6901` (vnc web access):
 
     nvidia-docker run --rm -d -p 5901:5901 -p 6901:6901 docker-headless-vnc-container
 
-The usage is for all provide images **similar**, for instance see following the usage of the `consol/centos-xfce-vnc` image:
-
-Run command with mapping to local port `5901` (vnc protocol) and `6901` (vnc web access):
-
-    docker run -d -p 5901:5901 -p 6901:6901 consol/centos-xfce-vnc
-  
 Change the default user and group within a container to your own with adding `--user $(id -u):$(id -g)`:
 
     docker run -d -p 5901:5901 -p 6901:6901 --user $(id -u):$(id -g) consol/centos-xfce-vnc
