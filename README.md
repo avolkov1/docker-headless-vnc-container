@@ -85,6 +85,10 @@ the docker run command:
     docker run -it -p 5901:5901 -p 6901:6901 -e VNC_RESOLUTION=800x600 consol/centos-xfce-vnc
 
 
+<!---
+
+Original contact info:
+
 ## Contact
 For questions, professional support or maybe some hints, feel free to contact us via **[testautomatisierung@consol.de](mailto:testautomatisierung@consol.de)** or open an [issue](https://github.com/ConSol/docker-headless-vnc-container/issues/new).
 
@@ -94,3 +98,4 @@ The guys behind:
 *Franziskanerstr. 38, D-81669 München* <br/>
 *Tel. +49-89-45841-100, Fax +49-89-45841-111*<br/>
 *Homepage: http://www.consol.de E-Mail: [info@consol.de](info@consol.de)*
+--->
