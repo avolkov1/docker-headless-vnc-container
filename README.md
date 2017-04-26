@@ -26,7 +26,7 @@ If you wan't to get into the container use  interactive mode `-it` and `bash`
 
 Build a image from scratch:
 
-    docker build -t consol/centos-xfce-vnc centos-xfce-vnc
+    docker build -t $(basename $PWD) .
 
 => connect via __VNC viewer `localhost:5901`__, default password: `vncpassword`
 
