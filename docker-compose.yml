@@ -1,0 +1,19 @@
+version: '2'
+services:
+    desktop:
+        image: docker-headless-vnc-container
+        pid: host
+        privileged: true
+        volumes:
+            - /etc/passwd:/etc/passwd:ro
+            - /etc/shadow:/etc/shadow:ro
+            - /etc/group:/etc/group:ro
+            - /etc/gshadow:/etc/gshadow:ro
+            - /etc/sudoers:/etc/sudoers:ro
+            - /etc/sudoers.d/:/etc/sudoers.d/:ro
+            - /etc/hostname:/etc/hostname:ro
+            - /var/run/docker.sock:/var/run/docker.sock
+        ports:
+            - 5901:5901
+            - 6901:6901
+        user: $USER
