@@ -71,7 +71,7 @@ RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf && \
 
 # USER 1984
 
-# ENTRYPOINT ["/dockerstartup/vnc_startup.sh"]
-# CMD ["--tail-log"]
-CMD ["bash", "--init-file", "/dockerstartup/vnc_startup.sh"]
+ENTRYPOINT ["/dockerstartup/vnc_startup.sh"]
+CMD ["--tail-log"]
+# CMD ["bash", "--init-file", "/dockerstartup/vnc_startup.sh"]
 
