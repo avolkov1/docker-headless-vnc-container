@@ -1,17 +1,7 @@
 # FROM ubuntu:16.04
 FROM nvidia/cuda:8.0-cudnn6-devel-ubuntu16.04
-# FROM tensorflow/tensorflow:1.1.0-devel-gpu
-# FROM nvcr.io/nvidia/tensorflow:17.04
 
-#MAINTAINER Tobias Schneck "tobias.schneck@consol.de"
 MAINTAINER Douglas Holt "dholt@nvidia.com"
-
-# Add label to include nvidia-docker volume
-LABEL com.nvidia.volumes.needed="nvidia_driver"
-
-### Add paths to nvidia tools
-ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
-ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}
 
 ## Connection ports for controlling the UI:
 # VNC port:5901
@@ -57,21 +47,14 @@ RUN $INST_SCRIPTS/firefox.sh
 RUN $INST_SCRIPTS/xfce_ui.sh
 ADD ./src/common/xfce/ $HOMELESS/
 
+### Install Docker
+RUN $INST_SCRIPTS/docker.sh
+
 ### configure startup
 RUN $INST_SCRIPTS/libnss_wrapper.sh
 ADD ./src/common/scripts $STARTUPDIR
 RUN $INST_SCRIPTS/set_user_permission.sh $STARTUPDIR $HOMELESS
 
-### Set LD paths to include NVIDIA libraries
-RUN echo "/usr/local/cuda/lib" >> /etc/ld.so.conf.d/cuda.conf && \
-    echo "/usr/local/cuda/lib64" >> /etc/ld.so.conf.d/cuda.conf && \
-    ldconfig
-RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf && \
-    echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
-
-# USER 1984
-
 ENTRYPOINT ["/dockerstartup/vnc_startup.sh"]
 CMD ["--tail-log"]
-# CMD ["bash", "--init-file", "/dockerstartup/vnc_startup.sh"]
 
