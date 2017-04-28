@@ -11,3 +11,8 @@ add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(
 apt-get update 
 apt-get install -y docker-ce
 apt-get clean -y
+
+echo "Install NVIDIA Docker wrapper"
+wget -P /tmp https://github.com/NVIDIA/nvidia-docker/releases/download/v1.0.1/nvidia-docker_1.0.1-1_amd64.deb
+dpkg -i /tmp/nvidia-docker*.deb && rm /tmp/nvidia-docker*.deb
+ln -s /bin/true /usr/local/bin/nvidia-modprobe
