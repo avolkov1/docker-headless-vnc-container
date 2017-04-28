@@ -1,9 +1,15 @@
 #!/bin/bash
 ### every exit != 0 fails the script
-set -e
+# set -e
+
+if [ ! -f "${HOME}/.config/xfce4/headlessconfig" ]; then
+    mkdir -p ${HOME}/.config/xfce4
+    \cp -rf ${HOMELESS}/.config/xfce4 ${HOME}/.config
+    touch ${HOME}/.config/xfce4/headlessconfig
+fi
 
 # should also source $STARTUPDIR/generate_container_user
-source $HOME/.bashrc
+source $HOMELESS/.bashrc
 
 # add `--skip` to startup args, to skip the VNC startup procedure
 if [[ $1 =~ --skip ]]; then
@@ -14,10 +20,10 @@ if [[ $1 =~ --skip ]]; then
 fi
 
 ## write correct window size to chrome properties
-$STARTUPDIR/chrome-init.sh
+# $STARTUPDIR/chrome-init.sh
 
-## resolve_vnc_connection
-VNC_IP=$(ip addr show eth0 | grep -Po 'inet \K[\d.]+')
+## resolve_vnc_connection # ip addr show docker0 to enable --net=host case
+VNC_IP=$(ip addr show eth0 || ip addr show docker0 | grep -Po 'inet \K[\d.]+')
 
 ## change vnc password
 echo -e "\n------------------ change VNC password  ------------------"
@@ -28,7 +34,7 @@ echo -e "\n------------------ change VNC password  ------------------"
 $NO_VNC_HOME/utils/launch.sh --vnc $VNC_IP:$VNC_PORT --listen $NO_VNC_PORT &
 vncserver -kill :1 || rm -rfv /tmp/.X*-lock /tmp/.X11-unix || echo "remove old vnc locks to be a reattachable container"
 vncserver $DISPLAY -depth $VNC_COL_DEPTH -geometry $VNC_RESOLUTION
-$HOME/wm_startup.sh
+$HOMELESS/wm_startup.sh
 
 ## log connect options
 echo -e "\n\n------------------ VNC environment started ------------------"
@@ -37,8 +43,8 @@ echo -e "\nnoVNC HTML client started:\n\t=> connect via http://$VNC_IP:$NO_VNC_P
 
 if [[ $1 =~ -t|--tail-log ]]; then
     # if option `-t` or `--tail-log` block the execution and tail the VNC log
-    echo -e "\n------------------ $HOME/.vnc/*$DISPLAY.log ------------------"
-    tail -f $HOME/.vnc/*$DISPLAY.log
+    echo -e "\n------------------ $HOMELESS/.vnc/*$DISPLAY.log ------------------"
+    tail -f $HOMELESS/.vnc/*$DISPLAY.log
 elif [ -z "$1" ] ; then
     echo -e "..."
 else
@@ -47,3 +53,4 @@ else
     echo "Executing command: '$@'"
     exec "$@"
 fi
+

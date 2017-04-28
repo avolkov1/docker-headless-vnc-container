@@ -1,6 +1,7 @@
 version: '2'
 services:
     desktop:
+        build: .
         image: docker-headless-vnc-container
         pid: host
         privileged: true
