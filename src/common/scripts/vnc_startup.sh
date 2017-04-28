@@ -1,6 +1,7 @@
 #!/bin/bash
 ### every exit != 0 fails the script
 # set -e
+set -x
 
 if [ ! -f "${HOME}/.config/xfce4/headlessconfig" ]; then
     mkdir -p ${HOME}/.config/xfce4
@@ -23,7 +24,8 @@ fi
 # $STARTUPDIR/chrome-init.sh
 
 ## resolve_vnc_connection # ip addr show docker0 to enable --net=host case
-VNC_IP=$(ip addr show eth0 || ip addr show docker0 | grep -Po 'inet \K[\d.]+')
+#VNC_IP=$(ip addr show eth0 || ip addr show docker0 | grep -Po 'inet \K[\d.]+')
+VNC_IP=$(ip route get 1 | awk '{print $NF;exit}')
 
 ## change vnc password
 echo -e "\n------------------ change VNC password  ------------------"
