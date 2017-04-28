@@ -46,7 +46,7 @@ echo -e "\nnoVNC HTML client started:\n\t=> connect via http://$VNC_IP:$NO_VNC_P
 if [[ $1 =~ -t|--tail-log ]]; then
     # if option `-t` or `--tail-log` block the execution and tail the VNC log
     echo -e "\n------------------ $HOMELESS/.vnc/*$DISPLAY.log ------------------"
-    tail -f $HOMELESS/.vnc/*$DISPLAY.log
+    tail -f $HOME/.vnc/*$DISPLAY.log
 elif [ -z "$1" ] ; then
     echo -e "..."
 else
