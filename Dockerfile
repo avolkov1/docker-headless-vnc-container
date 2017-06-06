@@ -1,5 +1,6 @@
 # FROM ubuntu:16.04
 FROM nvidia/cuda:8.0-cudnn6-devel-ubuntu16.04
+# FROM nvcr.io/nvidia/cuda:8.0-cudnn6-devel-ubuntu16.04
 
 MAINTAINER Douglas Holt "dholt@nvidia.com"
 
@@ -42,6 +43,8 @@ RUN $INST_SCRIPTS/firefox.sh
 #     Failed to move to new namespace: PID namespaces supported,
 #     Network namespace supported, but failed: errno = Operation not permitted
 # RUN $INST_SCRIPTS/chrome.sh
+
+RUN $INST_SCRIPTS/default_jre.sh
 
 ### Install xfce UI
 RUN $INST_SCRIPTS/xfce_ui.sh
