@@ -27,21 +27,15 @@ which is highly discouraged.
 Running as root is not recommended. A better approach is to run as a user with
 home directory mounted.
 
-    nvidia-docker run --name=mydesk --rm -d -t -u $(id -u):$(id -g) -e USER=$USER\
+    nvidia-docker run --name=mydesk -d -t -u $(id -u):$(id -g) -e USER=$USER \
       -e HOME=$HOME -v $HOME:$HOME --net=host -w $PWD ubuntu-vnc-xfce4
 
-An even better approach and the one recommended is to run using
-[***luda***](https://github.com/ryanolson/luda). The luda docker wrapper will
-properly map in the user and group of the host system into the container.
+To stop the container when done using it run:
 
-    luda -d "--name=mydesk --rm -d -t" --net=host \
-      ubuntu-vnc-xfce4 "bash --init-file /dockerstartup/vnc_startup.sh"
-
-When using luda the entrypoint/cmd has to be specified explicitly:
-```"bash --init-file /dockerstartup/vnc_startup.sh"```.
+    docker stop mydesk && docker rm mydesk
 
 When the home directory is mounted into the container the xfce4 desktop settings
-will persist if the container is restarted.
+will persist when the container is restarted.
 
 Download a VNC client for your system from
 [RealVnc](https://www.realvnc.com/download/viewer/), or use a web-browser.
@@ -49,6 +43,20 @@ Download a VNC client for your system from
 => connect via __VNC viewer `hostip:5901`__, default password: `vncpassword`
 
 => connect via __noVNC HTML5 client__: [http://hostip:6901/?password=vncpassword]()
+
+Within the container once connected with VNC or noVNC, run `nvidia-smi` command
+to see the GPUs. If the `nvidia-smi` command fails with message:
+```
+NVIDIA-SMI couldn't find libnvidia-ml.so library in your system...
+```
+
+Then run ldconfig command as follows:
+```bash
+docker exec -it -u root mydesk bash -c 'ldconfig'
+```
+
+Afterwards the `nvidia-smi` command should work within the container in the VNC
+session.
 
 
 ## Troubleshooting
@@ -70,15 +78,19 @@ The resolution can be changed after the container is launched via xrandr as well
 Overwrite the value of the environment variable `VNC_PW`. For example in
 the docker run command:
 
-    luda -d "--name=mydesk --rm -d -t" --net=host -e VNC_PW=my-pw \
-      ubuntu-vnc-xfce4 "bash --init-file /dockerstartup/vnc_startup.sh"
+    nvidia-docker run -d -t --name=mydesk --net=host \
+      -u $(id -u):$(id -g) -e HOME=$HOME -e USER=$USER -v $HOME:$HOME \
+      -e VNC_PW=my-pw \
+      -w $HOME ubuntu-vnc-xfce4
 
 #### 2) Example: Override the VNC resolution
 Overwrite the value of the environment variable `VNC_RESOLUTION`. For
 example in the docker run command:
 
-    luda -d "--name=mydesk --rm -d -t" --net=host -e VNC_RESOLUTION=800x600 \
-      ubuntu-vnc-xfce4 "bash --init-file /dockerstartup/vnc_startup.sh"
+    nvidia-docker run -d -t --name=mydesk --net=host \
+      -u $(id -u):$(id -g) -e HOME=$HOME -e USER=$USER -v $HOME:$HOME \
+      -e VNC_RESOLUTION=800x600 \
+      -w $HOME ubuntu-vnc-xfce4
 
 Or use xrandr once inside the container VNC session.
 

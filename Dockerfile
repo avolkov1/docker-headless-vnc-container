@@ -2,7 +2,7 @@
 FROM nvidia/cuda:8.0-cudnn6-devel-ubuntu16.04
 # FROM nvcr.io/nvidia/cuda:8.0-cudnn6-devel-ubuntu16.04
 
-MAINTAINER Douglas Holt "dholt@nvidia.com"
+MAINTAINER Alex Volkov "avolkov@nvidia.com"
 
 ## Connection ports for controlling the UI:
 # VNC port:5901
