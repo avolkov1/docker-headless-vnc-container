@@ -94,3 +94,68 @@ example in the docker run command:
 
 Or use xrandr once inside the container VNC session.
 
+
+## Experimental: Running docker from VNC container
+Using a few additional options when starting up this VNC container it is
+possible to launch other docker containers. For example if you are using the
+VNC container as an IDE with IDE tools, but woud like to then run a docker
+container. Docker enabled VNC container command:
+
+    nvidia-docker run --name=mydesk -d -t -u $(id -u):$(id -g) -e USER=$USER \
+      -e HOME=$HOME -v $HOME:$HOME --net=host \
+      --hostname $(hostname)_mydesk \
+      --group-add $(stat -c %g /var/run/docker.sock) \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      -w $HOME ubuntu-vnc-xfce4
+
+Once the container is launched and connected with VNC, open a terminal and run
+a container command. Example:
+
+```
+nvidia-docker run --rm --name=tf_test \
+    tensorflow/tensorflow:1.2.1-devel-gpu python -c '
+import tensorflow as tf
+print("TF version: {}".format(tf.__version__))
+from tensorflow.python.client import device_lib
+local_device_protos = device_lib.list_local_devices()
+gpus_list = [x.name for x in local_device_protos if x.device_type == "GPU"]
+print("Available GPUs: {}".format(gpus_list))'
+```
+
+Or an interactive session in a container in the VNC. Open a terminal and run:
+
+```
+tmpdir=${HOME}/tmp
+mkdir -p $tmpdir
+# Trick to make yourself appear in the container and run with your uid/gid.
+getent group > ${tmpdir}/group
+getent passwd > ${tmpdir}/passwd
+
+nvidia-docker run --rm --name=tf_test -ti \
+    -u $(id -u):$(id -g) -e HOME=$HOME -e USER=$USER -v $HOME:$HOME \
+    -v ${tmpdir}/group:/etc/group -v ${tmpdir}/passwd:/etc/passwd \
+    --hostname $(hostname)_tftest \
+    tensorflow/tensorflow:1.2.1-devel-gpu
+```
+
+The containers being launched from the VNC container are external to the vnc
+container itself in the sense that a directory not mapped into the vnc container
+can still be mapped into the container being launched. Say there is a directory
+`/datasets` that was not mounted during vnc-container launch. That directory
+can still be mapped to the containers. Example:
+
+```
+tmpdir=${HOME}/tmp
+mkdir -p $tmpdir
+# Trick to make yourself appear in the container and run with your uid/gid.
+getent group > ${tmpdir}/group
+getent passwd > ${tmpdir}/passwd
+
+nvidia-docker run --rm --name=tf_test \
+    -u $(id -u):$(id -g) -e HOME=$HOME -e USER=$USER -v $HOME:$HOME \
+    -v ${tmpdir}/group:/etc/group -v ${tmpdir}/passwd:/etc/passwd \
+    -v /datasets:/datasets \
+    tensorflow/tensorflow:1.2.1-devel-gpu bash -c \
+'ls -l /datasets'
+```
+
