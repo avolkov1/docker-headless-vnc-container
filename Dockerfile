@@ -53,6 +53,13 @@ ADD ./src/common/xfce/ $HOMELESS/
 ### Install Docker
 RUN $INST_SCRIPTS/docker.sh
 
+### Configure X server for GL
+RUN $INST_SCRIPTS/gl.sh
+ADD ./src/common/xorg.conf /etc/X11/
+
+### Install ParaView
+RUN $INST_SCRIPTS/paraview.sh
+
 ### configure startup
 RUN $INST_SCRIPTS/libnss_wrapper.sh
 ADD ./src/common/scripts $STARTUPDIR
